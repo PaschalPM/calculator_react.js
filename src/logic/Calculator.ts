@@ -8,18 +8,6 @@ let resCache: string = ""
 let equalsKeyPressNo: number = 0 // Number of times = key was pressed repetitively
 
 /**
- * Resets Expression for new calculation after displayed result
- * @param input 
- * @param expression 
- * @param setexpression 
- */
-const resetConstraint = (input: BtnKey, expression: string, setexpression: Function) => {
-    if (input.match(/[0-9]/) && result && !expression.match(lastCharOP)) {
-        setexpression("")
-    }
-}
-
-/**
  * Handles caches result and persists result from repetitively hitting 
  * equalsTo key
  * @param input 
@@ -58,20 +46,6 @@ const generalConstraint = (input: BtnKey, expression: string, setexpression: Fun
             setexpression((v: string) => v.slice(0, -1) + input)
         else
             setexpression((v: string) => v + input)
-    }
-    return condition
-}
-/**
- * Reset Arithmetic Expression displayed on Screen
- * @param input 
- * @param setexpression 
- * @returns 
- */
-const ACConstraint = (input: BtnKey, setexpression: Function) => {
-    let condition = input == "AC"
-
-    if (condition) {
-        setexpression("0")
     }
     return condition
 }
@@ -173,11 +147,15 @@ const evaluate = (input: BtnKey, expression: string, setexpression: Function,
 export const Execute = (input: BtnKey, expression: string, setexpression: Function, 
                         errorState: Function) => {
 
-    if (ACConstraint(input, setexpression))
-        return
-
+    // Constraint when key == "AC"
+    if (input == "AC"){
+        setexpression("0")
+        return;
+    }
     // Resets Expression for new calculation after result
-    resetConstraint(input, expression, setexpression)
+    if (input.match(/[0-9]/) && result && !expression.match(lastCharOP)) {
+        setexpression("")
+    }
 
     // Handle Cached result
     if (handleCachedResult(input, setexpression))
